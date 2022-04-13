@@ -1,5 +1,11 @@
-
 #!/usr/bin/env python
+
+
+##########################################################################################
+# Some of the code is adapted from:
+# https://github.com/crimson-unicorn/parsers/tree/master/cdm
+##########################################################################################
+
 
 import encodings
 import os
@@ -44,7 +50,7 @@ def print_all_cdm_record_type_in_json(fp):
         cdm_record_type = cdm_record['datum'].keys()[0]
         if cdm_record_type not in types:
             types.add(cdm_record_type)
-            print(cdm_record_type)
+            # print(cdm_record_type)
     f.close()
 
 # Test 1: What kind of CDM records do we have?
@@ -1288,7 +1294,7 @@ def process_cdm_event(record_value, input_format):
         values['bidirectional'] = False
 
     else:
-        print(record_value)
+        # print(record_value)
         raise KeyError('CDM20_TYPE_EVENT: type is undefined.')
 
     return values
@@ -1444,75 +1450,75 @@ for data_file in files:
                     'CDM avro format is not supported as of 01-04-09.')
             elif input_format == 'json':
                 cdm_record = json.loads(line.strip())
-                print(
-                    "--------------------------------------json------------------------------------")
-                print(cdm_record)
-                print(
+                # print(
+                #     "--------------------------------------json------------------------------------")
+                # print(cdm_record)
+                # print(
                     "------------------------------------------------------------------------------")
-                cdm_record_type = list(cdm_record['datum'].keys())[0]
-                cdm_record_value = cdm_record['datum'][cdm_record_type]
+                cdm_record_type=list(cdm_record['datum'].keys())[0]
+                cdm_record_value=cdm_record['datum'][cdm_record_type]
 
-                print(cdm_record_type)
+                # print(cdm_record_type)
             if cdm_record_type == CDM20_TYPE_SRCSINK:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_srcsink(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_srcsink(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_SRCSINK: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
 
             elif cdm_record_type == CDM20_TYPE_SUBJECT:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_subject(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_subject(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_SUBJECT: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
 
             elif cdm_record_type == CDM20_TYPE_FILE:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_file(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_file(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     # clearscope contain identical records
                     # check if the original UUIDs are the same
-                    node = nodes[uuid]
-                    nodeUUID = node['uuid']
+                    node=nodes[uuid]
+                    nodeUUID=node['uuid']
                     if nodeUUID == cdm_record_value['uuid']:
                         continue  # if simply because identical records, we just drop the record
                     else:  # if collision occurs
                         logging.debug(
                             'CDM20_TYPE_FILE: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
 
             elif cdm_record_type == CDM20_TYPE_SOCK:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_sock(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_sock(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_SOCK: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
 
             elif cdm_record_type == CDM20_TYPE_PIPE:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_pipe(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_pipe(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_PIPE: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
 
                 # TODO:
@@ -1522,14 +1528,14 @@ for data_file in files:
                 pass
 
             elif cdm_record_type == CDM20_TYPE_PRINCIPAL:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_principal(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_principal(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_PRINCIPAL: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
             # clearscope
             elif cdm_record_type == CDM20_TYPE_TAG:
@@ -1540,27 +1546,27 @@ for data_file in files:
             elif cdm_record_type == CDM20_TYPE_TIMEMARKER:
                 pass
             elif cdm_record_type == CDM20_TYPE_HOST:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_host(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_host(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_HOST: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
 
             elif cdm_record_type == CDM20_TYPE_KEY:
                 pass
             elif cdm_record_type == CDM20_TYPE_MEMORY:
-                uuid = cdm_record_value['uuid']
-                values = process_cdm_memory(
+                uuid=cdm_record_value['uuid']
+                values=process_cdm_memory(
                     cdm_record_value, input_format, next_id)
 
                 if uuid in nodes:
                     logging.debug(
                         'CDM20_TYPE_MEMORY: UUID is not unique. UUID: ' + repr(uuid))
-                nodes[uuid] = values
+                nodes[uuid]=values
                 next_id += 1
             elif cdm_record_type == CDM20_TYPE_ENDMARKER:
                 pass
@@ -1577,11 +1583,11 @@ for data_file in files:
 
 # go through the files again to output edge lists
 if system == 'marple':
-    first = ['ta1-marple-1-e5-official-1.bin.2.json']
+    first=['ta1-marple-1-e5-official-1.bin.2.json']
     # second = ['cadets-e3-1-0.json', 'cadets-e3-1-1.json', 'cadets-e3-1-2.json', 'cadets-e3-1-3.json', 'cadets-e3-1-4.json']
     # third = ['cadets-e3-2-0.json', 'cadets-e3-2-1.json']
 
-    out_first = output_locat
+    out_first=output_locat
     # out_second = '1-' + output_locat
     # out_third = '2-' + output_locat
 
